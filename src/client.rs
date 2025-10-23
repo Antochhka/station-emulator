@@ -186,7 +186,7 @@ impl Handler for Client {
                     }
                     "RequestStartTransaction" => {
                         let remote_start_id: u64 = match payload["remoteStartId"].as_number() {
-                            Some(res) => u64::from(res),
+                            Some(res) => (res.as_fixed_point_i64(0).unwrap_or(0) as u64),
                             None => panic!("Parsed message has no value."),
                         };
 
@@ -195,7 +195,7 @@ impl Handler for Client {
 
                         // Check connector status.
                         let evse_id: usize = match payload["evseId"].as_number() {
-                            Some(res) => usize::from(res),
+                            Some(res) => res.as_fixed_point_i64(0).unwrap_or(0) as usize,
                             _ => panic!("Parsed EVSE ID has no value."),
                         };
 
@@ -347,7 +347,7 @@ impl Handler for Client {
 
                             unsafe {
                                 match payload["interval"].as_number() {
-                                    Some(res) => HEARTBEAT_INTERVAL = u64::from(res) * 1000,
+                                    Some(res) => HEARTBEAT_INTERVAL = (res.as_fixed_point_i64(0).unwrap_or(0) as u64) * 1000,
                                     None => panic!("Parsed message has no value."),
                                 };
 
